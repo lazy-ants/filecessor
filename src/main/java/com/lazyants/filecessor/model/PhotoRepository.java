@@ -1,5 +1,7 @@
 package com.lazyants.filecessor.model;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
-public interface PhotoRepository extends CrudRepository<Photo, String> {}
+@RepositoryRestResource(path = "photos")
+public interface PhotoRepository extends MongoRepository<Photo, String> {}

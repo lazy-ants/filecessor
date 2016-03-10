@@ -14,7 +14,6 @@ import java.util.List;
 @Data
 @RequiredArgsConstructor
 @Document(collection = "photo")
-@JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE)
 public class Photo {
 
     @Id @JsonProperty
@@ -24,6 +23,7 @@ public class Photo {
 
     @CreatedDate
     @Field("created_at")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date createdAt = new Date();
 
     private String extension;
@@ -35,6 +35,7 @@ public class Photo {
 
     private Exif exif;
 
+    @JsonIgnore
     private String fixtures;
 }
 
