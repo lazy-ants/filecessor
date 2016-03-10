@@ -1,0 +1,48 @@
+images_data:
+    image: debian:jessie
+    volumes:
+        - /var/tmp/uploads
+        - ./media:/media
+    tty: true
+java:
+    image: lazyants/filecessor
+    ports:
+        - 8080:8080
+    volumes_from:
+        - images_data
+    links:
+        - db
+        - rabbit
+    environment:
+        MONGO_HOST: db
+        RABBIT_HOST: rabbit
+        RABBIT_PORT: 5672
+        APPLICATION_MEDIA_DIRECTORY_PATH: /media/
+nginx:
+    build: docker/nginx
+    ports:
+        - 80:80
+    links:
+        - java
+    volumes:
+        - ./docker/nginx/sites-enabled:/etc/nginx/sites-enabled
+    volumes_from:
+        - images_data
+db:
+    image: umputun/mongo-auth
+    ports:
+        - 27017:27017
+    volumes_from:
+        - db_data
+    environment:
+        MONGO_PASSWD: app
+rabbit:
+    image: rabbitmq:3
+    volumes_from:
+        - db_data
+db_data:
+    image: debian:jessie
+    volumes:
+        - /data/db
+        - /var/lib/rabbitmq
+    tty: true
