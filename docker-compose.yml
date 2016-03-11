@@ -24,8 +24,6 @@ nginx:
         - 80:80
     links:
         - java
-    volumes:
-        - ./docker/nginx/sites-enabled:/etc/nginx/sites-enabled
     volumes_from:
         - images_data
 db:
