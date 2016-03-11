@@ -46,6 +46,9 @@ public class UploadControllerIntergrationTest {
     @Autowired
     private RabbitConfig rabbitConfiguration;
 
+    @Autowired
+    private ImageDownloader imageDownloader;
+
     private String testRoot = "test_data";
 
     private File testImagesDir = new File(testRoot + "/images");
@@ -59,7 +62,8 @@ public class UploadControllerIntergrationTest {
         if (!testImagesDir.exists() && !testImagesDir.mkdirs() || !mediaDir.exists() && !mediaDir.mkdirs()) {
             throw new RuntimeException("temp directory cannot be created");
         }
-        mockMvc = MockMvcBuilders.standaloneSetup(new UploadController(photoRepository,rabbitTemplate, configuration, rabbitConfiguration)).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(new UploadController(photoRepository,rabbitTemplate, configuration,
+                rabbitConfiguration, imageDownloader)).build();
     }
 
     @Test
