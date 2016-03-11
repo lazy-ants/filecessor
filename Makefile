@@ -10,3 +10,6 @@ up:
 
 down:
 	docker-compose down
+
+permissions:
+	sudo chmod a+w media volumes && sudo chmod a+s media volumes

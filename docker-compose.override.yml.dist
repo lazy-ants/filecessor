@@ -1,0 +1,23 @@
+nginx:
+    volumes:
+        - ./volumes/nginx_cache:/var/cache/nginx
+java:
+    environment:
+        MONGO_PASSWORD: app
+db:
+    environment:
+        MONGO_PASSWD: app
+images_data:
+    image: debian:jessie
+    volumes:
+        - ./volumes/nginx_uploads:/var/tmp/uploads
+        - ./media:/media
+    tty: true
+db_data:
+    volumes:
+        - ./volumes/mongodb:/data/db
+        - ./volumes/rabbitmq:/var/lib/rabbitmq
+logs_data:
+    volumes:
+        - ./volumes/logs/nginx:/var/log/nginx
+        - ./volumes/logs/filecessor:/var/logs/filecessor
