@@ -1,3 +1,5 @@
 /media/*
+/volumes/*
+!.gitkeep
 /target
 docker-compose.override.yml
