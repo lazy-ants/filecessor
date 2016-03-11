@@ -1,3 +1,6 @@
+nginx:
+    ports:
+        - 80:80
 java:
     environment:
         MONGO_PASSWORD: app

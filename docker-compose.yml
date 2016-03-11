@@ -1,8 +1,6 @@
 nginx:
     build: docker/nginx
     restart: always
-    ports:
-        - 80:80
     links:
         - java
     volumes_from:
