@@ -14,9 +14,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.imageio.ImageIO;
 import javax.validation.Valid;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 
@@ -50,16 +54,43 @@ public class UploadController {
         photo.setFilename(file.getFileName());
         photoRepository.save(photo);
 
-        File to = new File(configuration.getMediaDirectoryPath() + photo.getId() + "." + photo.getExtension());
+        File to = getImageDestination(photo);
         File from = new File(file.getFilePath());
         try {
             Files.move(from.toPath(), to.toPath(), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             logger.error("Error moving from " + from.getAbsolutePath() + " to " + to.getAbsolutePath());
-            return new ResponseEntity<String>("Bad path", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Bad path", HttpStatus.BAD_REQUEST);
         }
         rabbitTemplate.convertAndSend(rabbitConfig.getQueueName(), photo.getId());
 
-        return new ResponseEntity<Photo>(photo, HttpStatus.CREATED);
+        return new ResponseEntity<>(photo, HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "/image-url", method = RequestMethod.POST)
+    ResponseEntity<?> downloadImageByUrl(@RequestParam String url) {
+        try {
+            URL u = new URL(url);
+            URLConnection uc = u.openConnection();
+            String extension = ExtensionGenerator.getExtension(uc.getContentType());
+            if (extension == null) {
+                throw new IOException("Invalid type");
+            }
+            Photo photo = new Photo();
+            photo.setExtension(extension);
+            photoRepository.save(photo);
+
+            BufferedImage image = ImageIO.read(uc.getInputStream());
+            ImageIO.write(image, "jpg", getImageDestination(photo));
+
+            return new ResponseEntity<>(photo, HttpStatus.CREATED);
+        } catch (IOException e) { /* nop */ }
+
+        logger.error("Image url '" + url + "' is invalid");
+        return new ResponseEntity<>("Invalid url", HttpStatus.BAD_REQUEST);
+    }
+
+    private File getImageDestination(Photo photo) {
+        return new File(configuration.getMediaDirectoryPath() + photo.getId() + "." + photo.getExtension());
     }
 }
