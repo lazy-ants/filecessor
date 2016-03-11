@@ -1,10 +1,12 @@
-all: install
+CC = gcc
 
-install:
-	sudo chmod a+w media && mvn -D skipTests=true package docker:build && docker-compose up -d
+all: up
+
+rebuild:
+	mvn -D skipTests=true package docker:build && make up
 
 up:
-	mvn -D skipTests=true package docker:build && docker-compose up -d
+	docker-compose up -d
 
 down:
 	docker-compose down

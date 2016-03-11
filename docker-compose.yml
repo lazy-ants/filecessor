@@ -6,8 +6,6 @@ images_data:
     tty: true
 java:
     image: lazyants/filecessor
-    ports:
-        - 8080:8080
     volumes_from:
         - images_data
     links:
@@ -28,8 +26,6 @@ nginx:
         - images_data
 db:
     image: umputun/mongo-auth
-    ports:
-        - 27017:27017
     volumes_from:
         - db_data
     environment:
