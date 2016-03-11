@@ -1,5 +1,6 @@
 nginx:
     build: docker/nginx
+    restart: always
     ports:
         - 80:80
     links:
@@ -9,6 +10,7 @@ nginx:
         - logs_data
 java:
     image: lazyants/filecessor
+    restart: always
     volumes_from:
         - images_data
     links:
@@ -21,12 +23,14 @@ java:
         APPLICATION_MEDIA_DIRECTORY_PATH: /media/
 db:
     image: umputun/mongo-auth
+    restart: always
     volumes_from:
         - db_data
     environment:
         MONGO_PASSWD: app
 rabbit:
     image: rabbitmq:3
+    restart: always
     volumes_from:
         - db_data
 
@@ -35,6 +39,7 @@ images_data:
     image: debian:jessie
     volumes:
         - /var/tmp/uploads
+        - /var/cache/uploads
         - ./media:/media
     tty: true
 db_data:
@@ -47,5 +52,6 @@ logs_data:
     image: debian:jessie
     volumes:
         - /var/log/nginx
+        - /var/cache/nginx
         - /var/log/filecessor
     tty: true
