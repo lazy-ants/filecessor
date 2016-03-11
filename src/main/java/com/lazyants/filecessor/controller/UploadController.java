@@ -6,6 +6,7 @@ import com.lazyants.filecessor.model.Photo;
 import com.lazyants.filecessor.model.PhotoFile;
 import com.lazyants.filecessor.model.PhotoRepository;
 import com.lazyants.filecessor.utils.ExtensionGenerator;
+import com.lazyants.filecessor.utils.MetadataDownloader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -88,6 +89,12 @@ public class UploadController {
 
         logger.error("Image url '" + url + "' is invalid");
         return new ResponseEntity<>("Invalid url", HttpStatus.BAD_REQUEST);
+    }
+
+    @RequestMapping(value = "/video", method = RequestMethod.POST)
+    ResponseEntity<?> downloadVideoThumb(@RequestParam(name = "video-url") String videoUrl) {
+
+        return new ResponseEntity<>(MetadataDownloader.getMetadataUrl(videoUrl), HttpStatus.BAD_REQUEST);
     }
 
     private File getImageDestination(Photo photo) {
