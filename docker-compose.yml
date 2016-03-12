@@ -6,19 +6,16 @@ nginx:
     volumes_from:
         - images_data
         - logs_data
+        - nginx_cache
 java:
     image: lazyants/filecessor
     restart: always
     volumes_from:
         - images_data
+        - logs_data
     links:
         - db
         - rabbit
-    environment:
-        MONGO_HOST: db
-        RABBIT_HOST: rabbit
-        RABBIT_PORT: 5672
-        APPLICATION_MEDIA_DIRECTORY_PATH: /media/
 db:
     image: umputun/mongo-auth
     restart: always
@@ -40,6 +37,11 @@ images_data:
         - /var/cache/uploads
         - ./media:/media
     tty: true
+nginx_cache:
+    image: debian:jessie
+    volumes:
+        - /var/cache/nginx
+    tty: true
 db_data:
     image: debian:jessie
     volumes:
@@ -50,6 +52,5 @@ logs_data:
     image: debian:jessie
     volumes:
         - /var/log/nginx
-        - /var/cache/nginx
         - /var/log/filecessor
     tty: true

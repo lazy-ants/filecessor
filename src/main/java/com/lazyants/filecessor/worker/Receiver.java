@@ -5,6 +5,8 @@ import com.lazyants.filecessor.model.Photo;
 import com.lazyants.filecessor.model.PhotoRepository;
 import com.lazyants.filecessor.service.ColorFinder;
 import com.lazyants.filecessor.service.ExifParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -21,6 +23,8 @@ public class Receiver {
 
     private ApplicationConfiguration configuration;
 
+    private Logger logger = LoggerFactory.getLogger(Receiver.class);
+
     public Receiver(ColorFinder finder, PhotoRepository repository, ApplicationConfiguration configuration) {
         this.parser = new ExifParser(configuration.getExiftoolPath());
         this.finder = finder;
@@ -36,7 +40,7 @@ public class Receiver {
             photo.setExif(parser.parseExif(photoFile));
             photo.setColors(Arrays.asList(finder.findColors(photoFile)));
             repository.save(photo);
+            logger.info("Execution of image " + photo.getId() + " processing: " + (System.currentTimeMillis() - time) + "ms");
         }
-        System.out.println("execution: " + (System.currentTimeMillis() - time) + "ms");
     }
 }

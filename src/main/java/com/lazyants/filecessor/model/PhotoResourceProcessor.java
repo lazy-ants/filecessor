@@ -1,5 +1,7 @@
 package com.lazyants.filecessor.model;
 
+import com.lazyants.filecessor.configuration.ApplicationConfiguration;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceProcessor;
@@ -9,12 +11,19 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @Component
 class PhotoResourceProcessor implements ResourceProcessor<Resource<Photo>> {
 
+    private ApplicationConfiguration configuration;
+
+    @Autowired
+    public PhotoResourceProcessor(ApplicationConfiguration configuration) {
+        this.configuration = configuration;
+    }
+
     @Override
     public Resource<Photo> process(Resource<Photo> photoResource) {
-        String[] formats = new String[] {"medium", "thumb", "small", "big", "original", "mobile"};
+
         Photo photo = photoResource.getContent();
 
-        for (String format: formats) {
+        for (String format: configuration.getFormats()) {
             String path = ServletUriComponentsBuilder
                     .fromCurrentRequest()
                     .replacePath("/media/{format}/{id}.{ext}")

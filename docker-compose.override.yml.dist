@@ -19,6 +19,8 @@ db_data:
         - ./volumes/rabbitmq:/var/lib/rabbitmq
 logs_data:
     volumes:
-        - ./volumes/logs/nginx:/var/log/nginx
+        - ./volumes/log/nginx:/var/log/nginx
+        - ./volumes/log/filecessor:/var/log/filecessor
+nginx_cache:
+    volumes:
         - ./volumes/cache/nginx:/var/cache/nginx
-        - ./volumes/logs/filecessor:/var/logs/filecessor

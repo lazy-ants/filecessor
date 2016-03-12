@@ -2,7 +2,6 @@ package com.lazyants.filecessor.configuration;
 
 import com.lazyants.filecessor.model.PhotoRepository;
 import com.lazyants.filecessor.service.ColorFinder;
-import com.lazyants.filecessor.service.ExifParser;
 import com.lazyants.filecessor.worker.Receiver;
 import lombok.Data;
 import org.springframework.amqp.core.Binding;
@@ -20,7 +19,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Data
 @Configuration
-@ConfigurationProperties(prefix="rabbit")
+@ConfigurationProperties(prefix="rabbitmq")
 public class RabbitConfig {
 
     private String host;

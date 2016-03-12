@@ -11,4 +11,10 @@ public class ApplicationConfiguration {
     private String exiftoolPath;
 
     private String mediaDirectoryPath;
+
+    private String[] formats;
+
+    public void setFormats(String string) {
+        this.formats = string.split(",");
+    }
 }
