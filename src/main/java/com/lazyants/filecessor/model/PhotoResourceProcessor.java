@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceProcessor;
+import org.springframework.hateoas.UriTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -23,14 +24,15 @@ class PhotoResourceProcessor implements ResourceProcessor<Resource<Photo>> {
 
         Photo photo = photoResource.getContent();
 
-        for (String format: configuration.getFormats()) {
             String path = ServletUriComponentsBuilder
                     .fromCurrentRequest()
-                    .replacePath("/media/{format}/{id}.{ext}")
-                    .buildAndExpand(format, photo.getId(), photo.getExtension())
+                    .replacePath("/")
+                    .build()
                     .toString();
-            photoResource.add(new Link(path, format));
-        }
+
+            photoResource.add(new Link(new UriTemplate(path + "resize_{width}x{height}/" + photo.getId() + "." + photo.getExtension()), "resize"));
+            photoResource.add(new Link(new UriTemplate(path + "crop_{width}x{height}/" + photo.getId() + "." + photo.getExtension()), "crop"));
+            photoResource.add(new Link(path + "original/" + photo.getId() + "." + photo.getExtension(), "original"));
 
         return photoResource;
     }
