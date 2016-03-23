@@ -11,7 +11,7 @@ public class ExceptionHandlingAdvice {
     @ResponseBody
     @ExceptionHandler(ApplicationClientException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    ClientError userNotFoundExceptionHandler(ApplicationClientException ex) {
+    ClientError applicationExceptionHandle(ApplicationClientException ex) {
         return new ClientError(ex.getMessage());
     }
 }

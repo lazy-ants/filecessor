@@ -1,42 +1,41 @@
 package com.lazyants.filecessor.controller;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.lazyants.filecessor.security.TokenAuthenticationService;
+import com.lazyants.filecessor.security.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.ServletException;
-import java.util.*;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/auth")
 public class UserController {
-    private final Map<String, List<String>> userDb = new HashMap<>();
+    private final UserService userService;
 
-    public UserController() {
-        userDb.put("tom", Arrays.asList("user"));
-        userDb.put("sally", Arrays.asList("user", "admin"));
+    private final TokenAuthenticationService authenticationService;
+
+    @Autowired
+    public UserController(UserService service, TokenAuthenticationService authenticationService) {
+        this.userService = service;
+        this.authenticationService = authenticationService;
     }
 
-    @RequestMapping(value = "login", method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST)
     public LoginResponse login(@RequestBody final UserLogin login) throws ServletException {
-        if (login.name == null || !userDb.containsKey(login.name)) {
+        if (login.name == null || userService.loadUserByUsername(login.name) == null) {
             throw new ServletException("Invalid login");
         }
-        return new LoginResponse(Jwts.builder().setSubject(login.name)
-                .claim("roles", userDb.get(login.name)).setIssuedAt(new Date())
-                .signWith(SignatureAlgorithm.HS256, "secretkey").compact());
+        return new LoginResponse(authenticationService.createTokenForUser(userService.loadUserByUsername(login.name)));
     }
 
-    @SuppressWarnings("unused")
     private static class UserLogin {
         public String name;
         public String password;
     }
 
-    @SuppressWarnings("unused")
     private static class LoginResponse {
         public String token;
 

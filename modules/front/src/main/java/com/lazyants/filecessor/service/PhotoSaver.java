@@ -3,8 +3,11 @@ package com.lazyants.filecessor.service;
 import com.lazyants.filecessor.configuration.BaseApplicationConfiguration;
 import com.lazyants.filecessor.exception.ApplicationClientException;
 import com.lazyants.filecessor.model.Photo;
+import com.lazyants.filecessor.model.PhotoFile;
 import com.lazyants.filecessor.model.PhotoRepository;
 import com.lazyants.filecessor.utils.ExtensionGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,18 +17,24 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 @Component
-public class ImageDownloader {
+public class PhotoSaver {
+    private final PhotoRepository photoRepository;
 
-    private PhotoRepository photoRepository;
+    private final BaseApplicationConfiguration configuration;
 
-    private BaseApplicationConfiguration configuration;
+    private final RabbitPublisher publisher;
+
+    private static final Logger logger = LoggerFactory.getLogger(PhotoSaver.class);
 
     @Autowired
-    public ImageDownloader(PhotoRepository photoRepository, BaseApplicationConfiguration configuration) {
+    public PhotoSaver(PhotoRepository photoRepository, BaseApplicationConfiguration configuration, RabbitPublisher publisher) {
         this.photoRepository = photoRepository;
         this.configuration = configuration;
+        this.publisher = publisher;
     }
 
     public Photo downloadImage(String url) {
@@ -42,10 +51,31 @@ public class ImageDownloader {
 
             BufferedImage image = ImageIO.read(uc.getInputStream());
             ImageIO.write(image, "jpg", new File(configuration.getMediaDirectoryPath() + photo.getId() + "" + photo.getExtension()));
+            publisher.publishPhotoId(photo.getId());
 
             return photo;
         } catch (IOException ignored) {}
 
         throw new ApplicationClientException("Unable to download image");
+    }
+
+    public Photo saveFile(PhotoFile file) {
+        Photo photo = new Photo();
+        photo.setExtension(ExtensionGenerator.getExtension(file.getFileContentType()));
+        photo.setContentSize(file.getFileSize());
+        photo.setFilename(file.getFileName());
+        photoRepository.save(photo);
+
+        File to = new File(configuration.getMediaDirectoryPath() + photo.getId() + "." + photo.getExtension());
+        File from = new File(file.getFilePath());
+        try {
+            Files.move(from.toPath(), to.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            logger.error("Error moving from " + from.getAbsolutePath() + " to " + to.getAbsolutePath());
+            throw new ApplicationClientException("Bad path");
+        }
+        publisher.publishPhotoId(photo.getId());
+
+        return photo;
     }
 }
