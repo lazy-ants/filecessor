@@ -1,7 +1,10 @@
 nginx:
     ports:
         - 80:80
-java:
+front:
+    environment:
+        MONGO_PASSWORD: app
+handler
     environment:
         MONGO_PASSWORD: app
 db:
