@@ -1,6 +1,7 @@
 package com.lazyants.filecessor.security;
 
 import com.lazyants.filecessor.configuration.ApplicationConfiguration;
+import io.jsonwebtoken.JwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
@@ -24,10 +25,13 @@ public class TokenAuthenticationService {
             return null;
         }
 
-        final User user = tokenHandler.parseUserFromToken(authHeader.substring(7));
-        if (user != null) {
-            return new UserAuthentication(user);
-        }
+        try {
+            final User user = tokenHandler.parseUserFromToken(authHeader.substring(7));
+            if (user != null) {
+                return new UserAuthentication(user);
+            }
+        } catch (JwtException ignore) {}
+
         return null;
     }
 

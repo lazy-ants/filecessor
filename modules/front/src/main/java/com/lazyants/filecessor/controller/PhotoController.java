@@ -1,26 +1,26 @@
 package com.lazyants.filecessor.controller;
 
-import com.lazyants.filecessor.model.Photo;
-import com.lazyants.filecessor.model.PhotoFile;
-import com.lazyants.filecessor.model.PhotoRepository;
-import com.lazyants.filecessor.security.UserAuthentication;
+import com.lazyants.filecessor.model.*;
 import com.lazyants.filecessor.service.PhotoSaver;
 import com.lazyants.filecessor.utils.MetadataDownloader;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedResources;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping(value = "/api/photos")
+@RequestMapping(value = "/api/photos", produces = {"application/json"})
 public class PhotoController {
 
     private final PhotoRepository photoRepository;
 
     private final PhotoSaver photoSaver;
+
+    private PhotoResourceAssembler photoResourceAssembler = new PhotoResourceAssembler(PhotoController.class, PhotoResource.class);
 
     @Autowired
     public PhotoController(PhotoRepository photoRepository, PhotoSaver photoSaver) {
@@ -29,8 +29,13 @@ public class PhotoController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    Page<Photo> readPhotos(Pageable pageable, UserAuthentication authentication) {
-        return photoRepository.findAll(pageable);
+    public PagedResources<PhotoResource> list(Pageable pageable, PagedResourcesAssembler<Photo> pagedAssembler) {
+        return pagedAssembler.toResource(photoRepository.findAll(pageable), photoResourceAssembler);
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public PhotoResource get(@PathVariable("id") String id) {
+        return new PhotoResource(photoRepository.findOne(id));
     }
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST)

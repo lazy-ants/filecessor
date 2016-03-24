@@ -3,15 +3,15 @@ package com.lazyants.filecessor.controller;
 import com.lazyants.filecessor.security.TokenAuthenticationService;
 import com.lazyants.filecessor.security.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.ServletException;
-
 @RestController
-@RequestMapping("/auth")
+@RequestMapping(value = "/auth", produces = {"application/json"})
 public class UserController {
     private final UserService userService;
 
@@ -24,9 +24,9 @@ public class UserController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public LoginResponse login(@RequestBody final UserLogin login) throws ServletException {
+    public LoginResponse login(@RequestBody final UserLogin login) throws AuthenticationException {
         if (login.name == null || userService.loadUserByUsername(login.name) == null) {
-            throw new ServletException("Invalid login");
+            throw new BadCredentialsException("Invalid login");
         }
         return new LoginResponse(authenticationService.createTokenForUser(userService.loadUserByUsername(login.name)));
     }
