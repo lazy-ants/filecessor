@@ -48,21 +48,21 @@ public class PhotoController {
     @RequestMapping(value = "/photos/upload", method = RequestMethod.POST)
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
-    public Photo upload(@Valid @ModelAttribute PhotoFile file, UserAuthentication authentication) {
-        return photoSaver.saveFile(file, authentication);
+    public PhotoResource upload(@Valid @ModelAttribute PhotoFile file, UserAuthentication authentication) {
+        return new PhotoResource(photoSaver.saveFile(file, authentication));
     }
 
-    @RequestMapping(value = "/photos/image-url", method = RequestMethod.POST)
+    @RequestMapping(value = "/photos/url", method = RequestMethod.POST)
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
-    public Photo downloadImageByUrl(@RequestParam String url, UserAuthentication authentication) {
-        return photoSaver.downloadImage(url, authentication);
+    public PhotoResource downloadImageByUrl(@RequestBody @Valid final LinkBody linkBody, UserAuthentication authentication) {
+        return new PhotoResource(photoSaver.downloadImage(linkBody.getUrl(), authentication));
     }
 
-    @RequestMapping(value = "/photos/video", method = RequestMethod.POST)
+    @RequestMapping(value = "/photos/video-preview", method = RequestMethod.POST)
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
-    Photo downloadVideoThumb(@RequestParam(name = "video-url") String videoUrl, UserAuthentication authentication) {
-        return photoSaver.downloadImage(MetadataDownloader.getThumbnailUrl(videoUrl), authentication);
+    public PhotoResource downloadVideoPreview(@RequestBody @Valid final LinkBody linkBody, UserAuthentication authentication) {
+        return new PhotoResource(photoSaver.downloadImage(MetadataDownloader.getThumbnailUrl(linkBody.getUrl()), authentication));
     }
 }
