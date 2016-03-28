@@ -4,7 +4,7 @@ nginx:
 front:
     environment:
         MONGO_PASSWORD: app
-handler
+handler:
     environment:
         MONGO_PASSWORD: app
 db:

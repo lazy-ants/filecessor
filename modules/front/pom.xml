@@ -17,7 +17,6 @@
         <dependency>
             <groupId>lazyants</groupId>
             <artifactId>filecessor-core</artifactId>
-            <version>0.1</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -39,7 +38,7 @@
     </dependencies>
 
     <build>
-        <finalName>${artifactId}</finalName>
+        <finalName>${project.artifactId}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

@@ -2,8 +2,8 @@ CC = gcc
 
 all: up
 
-rebuild:
-	mvn -D skipTests=true package docker:build && make up
+reinstall:
+	mvn -D skipTests=true install
 
 up:
 	docker-compose up -d

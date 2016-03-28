@@ -26,6 +26,9 @@ public class Photo {
 
     private String extension;
 
+    @Field("user_id")
+    private String userId;
+
     @Field("content_size")
     private long contentSize;
 

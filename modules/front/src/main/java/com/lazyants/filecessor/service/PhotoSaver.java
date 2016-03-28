@@ -5,6 +5,7 @@ import com.lazyants.filecessor.exception.ApplicationClientException;
 import com.lazyants.filecessor.model.Photo;
 import com.lazyants.filecessor.model.PhotoFile;
 import com.lazyants.filecessor.model.PhotoRepository;
+import com.lazyants.filecessor.security.UserAuthentication;
 import com.lazyants.filecessor.utils.ExtensionGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +38,7 @@ public class PhotoSaver {
         this.publisher = publisher;
     }
 
-    public Photo downloadImage(String url) {
+    public Photo downloadImage(String url, UserAuthentication authentication) {
         try {
             URL u = new URL(url);
             URLConnection uc = u.openConnection();
@@ -47,10 +48,15 @@ public class PhotoSaver {
             }
             Photo photo = new Photo();
             photo.setExtension(extension);
+            if (authentication != null) {
+                photo.setUserId(authentication.getDetails().getUsername());
+            }
             photoRepository.save(photo);
 
             BufferedImage image = ImageIO.read(uc.getInputStream());
-            ImageIO.write(image, "jpg", new File(configuration.getMediaDirectoryPath() + photo.getId() + "" + photo.getExtension()));
+            File out = new File(configuration.getMediaDirectoryPath() + photo.getId() + "." + photo.getExtension());
+            out.setReadable(true);
+            ImageIO.write(image, "jpg", out);
             publisher.publishPhotoId(photo.getId());
 
             return photo;
@@ -59,11 +65,14 @@ public class PhotoSaver {
         throw new ApplicationClientException("Unable to download image");
     }
 
-    public Photo saveFile(PhotoFile file) {
+    public Photo saveFile(PhotoFile file, UserAuthentication authentication) {
         Photo photo = new Photo();
         photo.setExtension(ExtensionGenerator.getExtension(file.getFileContentType()));
         photo.setContentSize(file.getFileSize());
         photo.setFilename(file.getFileName());
+        if (authentication != null) {
+            photo.setUserId(authentication.getDetails().getUsername());
+        }
         photoRepository.save(photo);
 
         File to = new File(configuration.getMediaDirectoryPath() + photo.getId() + "." + photo.getExtension());
