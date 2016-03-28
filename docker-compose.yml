@@ -2,13 +2,22 @@ nginx:
     build: docker/nginx
     restart: always
     links:
-        - java
+        - front
     volumes_from:
         - images_data
         - logs_data
         - nginx_cache
-java:
-    image: lazyants/filecessor
+front:
+    image: lazyants/filecessor-front
+    restart: always
+    volumes_from:
+        - images_data
+        - logs_data
+    links:
+        - db
+        - rabbit
+handler:
+    image: lazyants/filecessor-handler
     restart: always
     volumes_from:
         - images_data
