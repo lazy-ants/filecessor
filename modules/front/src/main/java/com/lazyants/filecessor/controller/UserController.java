@@ -5,6 +5,7 @@ import com.lazyants.filecessor.security.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,8 +26,12 @@ public class UserController {
 
     @RequestMapping(method = RequestMethod.POST)
     public LoginResponse login(@RequestBody final UserLogin login) throws AuthenticationException {
-        if (login.name == null || userService.loadUserByUsername(login.name) == null) {
-            throw new BadCredentialsException("Invalid login");
+        if (login.name == null || login.password == null) {
+            throw new BadCredentialsException("Invalid credentials");
+        }
+        User user = userService.loadUserByUsername(login.name);
+        if (user == null || !user.getPassword().equals(login.password)) {
+            throw new BadCredentialsException("Invalid credentials");
         }
         return new LoginResponse(authenticationService.createTokenForUser(userService.loadUserByUsername(login.name)));
     }
