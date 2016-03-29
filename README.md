@@ -83,7 +83,7 @@ db_data:
 
 - From the official Docker documentation https://hub.docker.com/_/mongo/
 
-    **WARNING (Windows & OS X)**: The default Docker setup on Windows and OS X uses a VirtualBox VM to host the Docker daemon. Unfortunately, the mechanism VirtualBox uses to share folders between the host system and the Docker container is not compatible with the memory mapped files used by MongoDB (see (vbox bug)[https://www.virtualbox.org/ticket/819], (docs.mongodb.org)[https://docs.mongodb.org/manual/administration/production-notes/#fsync-on-directories] and related (jira.mongodb.org bug)[https://jira.mongodb.org/browse/SERVER-8600]). This means that it is not possible to run a MongoDB container with the data directory mapped to the host.
+    **WARNING (Windows & OS X)**: The default Docker setup on Windows and OS X uses a VirtualBox VM to host the Docker daemon. Unfortunately, the mechanism VirtualBox uses to share folders between the host system and the Docker container is not compatible with the memory mapped files used by MongoDB (see [vbox bug](https://www.virtualbox.org/ticket/819), [docs.mongodb.org](https://docs.mongodb.org/manual/administration/production-notes/#fsync-on-directories) and related [jira.mongodb.org bug](https://jira.mongodb.org/browse/SERVER-8600)). This means that it is not possible to run a MongoDB container with the data directory mapped to the host.
 
 
 ## Contributing
