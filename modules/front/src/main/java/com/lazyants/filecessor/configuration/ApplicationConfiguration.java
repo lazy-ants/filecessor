@@ -9,4 +9,5 @@ import org.springframework.context.annotation.Configuration;
 @Data
 public class ApplicationConfiguration extends BaseApplicationConfiguration {
     private String jwtSecret;
+    private String usersFile;
 }
