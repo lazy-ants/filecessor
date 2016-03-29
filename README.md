@@ -4,18 +4,20 @@ Upload and processing images for your web projects
 
 ## Description
 
-- Uploading images via nginx upload progress module
-- Progress of uploading using nginx upload progress module
-- Dinamic resizing of images(configuration in nginx config), with caching
+- Uploading images and Progressing response with nginx upload progress module
+- Dinamic resizing by specify actions urls, with caching
+    - `original` - get original image
+    - `resize`
+    - `crop`
+    - `coordinates` - crop image by given coordinates
 - After upload images save to async queue in rabbitmq for handling
-- Handling images
     - fetch exif
     - search of dominant image colors
-- Expose rest api for photo resources
+- Expose REST API for photo resources
 
-## Api 
+## Api
 
-- http://docs.filecessor.apiary.io/
+- Read API documentation about how to use the service http://docs.filecessor.apiary.io
 
 ## Install with Docker
 
