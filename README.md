@@ -30,7 +30,7 @@ Upload and processing images for your web projects
     - `MONGO_DATABASE`
     - `MONGO_AUTHENTICATION_DATABASE`
     - `MONGO_USERNAME`
-    - `MONGO_PASSWORD`
+    - `MONGO_PASSWD`
     - `RABBIT_HOST`
     - `RABBIT_PORT`
     - `RABBIT_QUEUE_NAME`

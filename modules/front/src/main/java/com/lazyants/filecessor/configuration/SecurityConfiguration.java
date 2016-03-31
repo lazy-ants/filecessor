@@ -37,10 +37,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .headers().cacheControl();
         http
                 .authorizeRequests()
-                .antMatchers("/").permitAll()
-                .antMatchers("/auth/**").permitAll()
-                .antMatchers("/api/photos/**").permitAll()
-                .anyRequest().authenticated().and()
+                .antMatchers("/api/me/**").authenticated().and()
                 .addFilterBefore(new StatelessAuthenticationFilter(tokenAuthenticationService), UsernamePasswordAuthenticationFilter.class);
     }
 

@@ -27,7 +27,7 @@ public class ResizeController {
         this.configuration = configuration;
     }
 
-    @RequestMapping("/resize_coordinates_{x1}x{y1}_{x2}x{y2}/{filename}.{ext}")
+    @RequestMapping("/crop_coordinates_{x1}x{y1}_{x2}x{y2}/{filename}.{ext}")
     public ResponseEntity<byte[]> coordinatesResize(@PathVariable int x1, @PathVariable int x2, @PathVariable int y1,
                                                     @PathVariable int y2, @PathVariable String filename, @PathVariable String ext) {
         try {

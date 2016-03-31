@@ -3,10 +3,10 @@ nginx:
         - 80:80
 front:
     environment:
-        MONGO_PASSWORD: app
+        MONGO_PASSWD: app
 handler:
     environment:
-        MONGO_PASSWORD: app
+        MONGO_PASSWD: app
 db:
     environment:
         MONGO_PASSWD: app
