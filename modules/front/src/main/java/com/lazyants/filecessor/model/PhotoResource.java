@@ -29,5 +29,6 @@ public class PhotoResource extends ResourceSupport {
         add(new Link(new UriTemplate(path + "resize_{width}x{height}/" + photo.getId() + "." + photo.getExtension()), "resize"));
         add(new Link(new UriTemplate(path + "crop_{width}x{height}/" + photo.getId() + "." + photo.getExtension()), "crop"));
         add(new Link(new UriTemplate(path + "crop_coordinates_{x1}x{y1}_{x2}x{y2}/" + photo.getId() + "." + photo.getExtension()), "coordinates"));
+        add(new Link(new UriTemplate(path + "rotate_{degrees}/" + photo.getId() + "." + photo.getExtension()), "rotate"));
     }
 }
