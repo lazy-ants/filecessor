@@ -15,6 +15,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 
 @RestController
@@ -29,20 +30,9 @@ public class ResizeController {
         this.handler = handler;
     }
 
-    @RequestMapping("/crop_coordinates_{x1}x{y1}_{x2}x{y2}/{filename}.{ext}")
-    public ResponseEntity<byte[]> coordinatesResize(@PathVariable int x1, @PathVariable int x2, @PathVariable int y1,
-                                                    @PathVariable int y2, @PathVariable String filename, @PathVariable String ext) {
-        BufferedImage image = handler.cropByCordinates(filename, ext, x1, y1, x2, y2);
-        if (image == null) {
-            throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Image not found");
-        }
-
-        return renderImage(image, ext);
-    }
-
-    @RequestMapping("/rotate_{degrees}/{filename}.{ext}")
-    public ResponseEntity<byte[]> coordinatesResize(@PathVariable String filename, @PathVariable String ext, @PathVariable("degrees") int degrees) {
-        BufferedImage image = handler.rotate(filename, ext, degrees);
+    @RequestMapping("/handling/{filters}/{filename}.{ext}")
+    public ResponseEntity<byte[]> handle(@PathVariable String filename, @PathVariable String ext, @PathVariable("filters") String filters) {
+        BufferedImage image = handler.transform(filters, new File(configuration.getMediaDirectoryPath() + filename + "." + ext));
         if (image == null) {
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Image not found");
         }

@@ -6,6 +6,8 @@ import com.drew.metadata.Metadata;
 import com.drew.metadata.MetadataException;
 import com.drew.metadata.exif.ExifIFD0Directory;
 import com.lazyants.filecessor.configuration.ApplicationConfiguration;
+import com.lazyants.filecessor.handling.TransformationBuilder;
+import com.lazyants.filecessor.utils.OperationCreator;
 import org.imgscalr.Scalr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,6 +25,17 @@ public class ImageHandler {
     @Autowired
     public ImageHandler(ApplicationConfiguration configuration) {
         this.configuration = configuration;
+    }
+
+    public BufferedImage transform(String transformation, File file) {
+        try {
+            BufferedImage image = ImageIO.read(file);
+            return new TransformationBuilder(image)
+                    .addOperations(OperationCreator.createOperations(transformation))
+                    .applyTransformations();
+        } catch (IOException ignore) {}
+
+        return null;
     }
 
     public BufferedImage cropByCordinates(String filename, String ext, int x1, int y1, int x2, int y2) {
