@@ -1,5 +1,6 @@
 package com.lazyants.filecessor.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -9,6 +10,7 @@ import java.util.Date;
 public class Exif {
 
     @Field("datetime_original")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date datetimeOriginal;
 
     @Field("exposure_time")

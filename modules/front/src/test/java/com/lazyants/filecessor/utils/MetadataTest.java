@@ -1,6 +1,5 @@
-package com.lazyants.filecessor.service;
+package com.lazyants.filecessor.utils;
 
-import com.lazyants.filecessor.utils.MetadataDownloader;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

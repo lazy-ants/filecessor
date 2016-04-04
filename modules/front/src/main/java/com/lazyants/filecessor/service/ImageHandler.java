@@ -5,9 +5,9 @@ import com.drew.imaging.ImageProcessingException;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.MetadataException;
 import com.drew.metadata.exif.ExifIFD0Directory;
-import com.lazyants.filecessor.configuration.ApplicationConfiguration;
-import org.imgscalr.Scalr;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.lazyants.filecessor.handling.Rotate;
+import com.lazyants.filecessor.handling.TransformationBuilder;
+import com.lazyants.filecessor.utils.OperationCreator;
 import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
@@ -18,40 +18,19 @@ import java.io.IOException;
 @Component
 public class ImageHandler {
 
-    private final ApplicationConfiguration configuration;
-
-    @Autowired
-    public ImageHandler(ApplicationConfiguration configuration) {
-        this.configuration = configuration;
-    }
-
-    public BufferedImage cropByCordinates(String filename, String ext, int x1, int y1, int x2, int y2) {
+    public BufferedImage transform(String transformation, File file) {
         try {
-            File file = new File(configuration.getMediaDirectoryPath() + filename + "." + ext);
             BufferedImage image = ImageIO.read(file);
-            Scalr.Rotation rotation = rotation(readRotationFromMetadata(file));
+            TransformationBuilder builder = new TransformationBuilder(image);
 
-            if (rotation != null) {
-                image = Scalr.rotate(image, rotation);
+            int exifRotation = readRotationFromMetadata(file);
+            if (exifRotation > 0) {
+                builder.addOperation(new Rotate(exifRotation));
             }
 
-            return Scalr.crop(image, x1, y1, Math.abs(x1 - x2), Math.abs(y1 - y2));
-        } catch (IOException ignore) {}
-
-        return null;
-    }
-
-    public BufferedImage rotate(String filename, String ext, int degrees) {
-        try {
-            File file = new File(configuration.getMediaDirectoryPath() + filename + "." + ext);
-            BufferedImage image = ImageIO.read(file);
-            Scalr.Rotation rotation = rotation(readRotationFromMetadata(file) + degrees);
-
-            if (rotation != null) {
-                image = Scalr.rotate(image, rotation);
-            }
-
-            return image;
+            return builder
+                    .addOperations(OperationCreator.createOperations(transformation))
+                    .applyTransformations();
         } catch (IOException ignore) {}
 
         return null;
@@ -76,22 +55,5 @@ public class ImageHandler {
         } catch (ImageProcessingException | IOException | MetadataException ignore) {}
 
         return 0;
-    }
-
-    private Scalr.Rotation rotation(int degrees) {
-        if (degrees >= 360) {
-            degrees -= 360;
-        }
-
-        switch (degrees) {
-            case 90:
-                return Scalr.Rotation.CW_90;
-            case 180:
-                return Scalr.Rotation.CW_180;
-            case 270:
-                return Scalr.Rotation.CW_270;
-        }
-
-        return null;
     }
 }
