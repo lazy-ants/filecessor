@@ -30,8 +30,8 @@ public class ResizeController {
         this.handler = handler;
     }
 
-    @RequestMapping("/handling/{filters}/{filename}.{ext}")
-    public ResponseEntity<byte[]> handle(@PathVariable String filename, @PathVariable String ext, @PathVariable("filters") String filters) {
+    @RequestMapping("/transform/{filters}/{filename}.{ext}")
+    public ResponseEntity<byte[]> transform(@PathVariable String filename, @PathVariable String ext, @PathVariable("filters") String filters) {
         BufferedImage image = handler.transform(filters, new File(configuration.getMediaDirectoryPath() + filename + "." + ext));
         if (image == null) {
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Image not found");

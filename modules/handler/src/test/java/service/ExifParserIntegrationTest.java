@@ -2,7 +2,6 @@ package service;
 
 import com.lazyants.filecessor.Application;
 import com.lazyants.filecessor.configuration.ApplicationConfiguration;
-import com.lazyants.filecessor.configuration.BaseApplicationConfiguration;
 import com.lazyants.filecessor.model.Exif;
 import com.lazyants.filecessor.service.ExifParser;
 import org.junit.Test;

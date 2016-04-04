@@ -17,6 +17,6 @@ public class Crop extends Operation {
 
     @Override
     public BufferedImage apply(BufferedImage image) {
-        return Scalr.crop(image, width, height);
+        return Scalr.crop(image, Math.min(width, image.getWidth()), Math.min(height, image.getHeight()));
     }
 }

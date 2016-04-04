@@ -17,6 +17,6 @@ public class Resize extends Operation {
 
     @Override
     public BufferedImage apply(BufferedImage image) {
-        return Scalr.resize(image, width, height);
+        return Scalr.resize(image, Math.min(width, image.getWidth()), Math.min(height, image.getHeight()));
     }
 }

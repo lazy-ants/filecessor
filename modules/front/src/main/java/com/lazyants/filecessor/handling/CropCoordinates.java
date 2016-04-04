@@ -1,5 +1,6 @@
 package com.lazyants.filecessor.handling;
 
+import com.lazyants.filecessor.exception.ApplicationClientException;
 import lombok.EqualsAndHashCode;
 import org.imgscalr.Scalr;
 
@@ -22,6 +23,10 @@ public class CropCoordinates extends Operation {
 
     @Override
     public BufferedImage apply(BufferedImage image) {
+        if (x1 > image.getWidth() || x2 > image.getWidth() || y1 > image.getHeight() || y2 > image.getHeight()
+                || x1 < 0 || x2 < 0 || y1 < 0 || y2 < 0) {
+            throw new ApplicationClientException("Coordinates is out of bounds");
+        }
         return Scalr.crop(image, x1, y1, Math.abs(x1 - x2), Math.abs(y1 - y2));
     }
 }
