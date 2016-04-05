@@ -81,4 +81,12 @@
         <module>modules/handler</module>
         <module>modules/front</module>
     </modules>
+
+    <repositories>
+        <repository>
+            <id>in-project</id>
+            <name>In Project Repo</name>
+            <url>file://${project.basedir}/lib</url>
+        </repository>
+    </repositories>
 </project>

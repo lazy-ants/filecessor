@@ -7,10 +7,12 @@ import com.drew.metadata.MetadataException;
 import com.drew.metadata.exif.ExifIFD0Directory;
 import com.lazyants.filecessor.handling.Rotate;
 import com.lazyants.filecessor.handling.TransformationBuilder;
+import com.lazyants.filecessor.utils.ImageReader;
 import com.lazyants.filecessor.utils.OperationCreator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -18,22 +20,27 @@ import java.io.IOException;
 @Component
 public class ImageHandler {
 
+    private static final Logger logger = LoggerFactory.getLogger(ImageHandler.class);
+
     public BufferedImage transform(String transformation, File file) {
-        try {
-            BufferedImage image = ImageIO.read(file);
-            TransformationBuilder builder = new TransformationBuilder(image);
+        long time = System.currentTimeMillis();
+        BufferedImage image = ImageReader.read(file);
+        logger.info("Image reads: " + (System.currentTimeMillis() - time) + "ms");
+        time = System.currentTimeMillis();
+        TransformationBuilder builder = new TransformationBuilder(image);
 
-            int exifRotation = readRotationFromMetadata(file);
-            if (exifRotation > 0) {
-                builder.addOperation(new Rotate(exifRotation));
-            }
+        int exifRotation = readRotationFromMetadata(file);
+        logger.info("Orientation reads: " + (System.currentTimeMillis() - time) + "ms");
+        if (exifRotation > 0) {
+            builder.addOperation(new Rotate(exifRotation));
+        }
 
-            return builder
-                    .addOperations(OperationCreator.createOperations(transformation))
-                    .applyTransformations();
-        } catch (IOException ignore) {}
-
-        return null;
+        time = System.currentTimeMillis();
+        BufferedImage result = builder
+                .addOperations(OperationCreator.createOperations(transformation))
+                .applyTransformations();
+        logger.info("Transformations: " + (System.currentTimeMillis() - time) + "ms");
+        return result;
     }
 
     private int readRotationFromMetadata(File file) {

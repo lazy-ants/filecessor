@@ -32,12 +32,8 @@ public class ResizeController {
 
     @RequestMapping("/transform/{filters}/{filename}.{ext}")
     public ResponseEntity<byte[]> transform(@PathVariable String filename, @PathVariable String ext, @PathVariable("filters") String filters) {
-        BufferedImage image = handler.transform(filters, new File(configuration.getMediaDirectoryPath() + filename + "." + ext));
-        if (image == null) {
-            throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Image not found");
-        }
-
-        return renderImage(image, ext);
+        File file = new File(configuration.getMediaDirectoryPath() + filename + "." + ext);
+        return renderImage(handler.transform(filters, file), ext);
     }
 
     private ResponseEntity<byte[]> renderImage(BufferedImage image, String ext) {
