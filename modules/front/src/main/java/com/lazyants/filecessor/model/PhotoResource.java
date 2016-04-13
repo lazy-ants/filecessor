@@ -24,6 +24,8 @@ public class PhotoResource extends ResourceSupport {
                 .build()
                 .toString();
 
+//        String transformPath = "http://localhost:8080/";
+
         add(linkTo(methodOn(PhotoController.class).get(photo.getId())).withSelfRel());
         add(new Link(path + "original/" + photo.getId() + "." + photo.getExtension(), "original"));
         add(new Link(new UriTemplate(path + "transform/resize_{width}x{height}/" + photo.getId() + "." + photo.getExtension()), "resize"));
