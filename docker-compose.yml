@@ -3,10 +3,16 @@ nginx:
     restart: always
     links:
         - front
+        - transformer
     volumes_from:
         - images_data
         - logs_data
         - nginx_cache
+transformer:
+    image: transformer
+    restart: always
+    volumes_from:
+        - images_data
 front:
     image: lazyants/filecessor-front
     restart: always
