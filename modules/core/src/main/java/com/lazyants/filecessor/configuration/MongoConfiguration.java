@@ -27,12 +27,12 @@ public class MongoConfiguration {
 
     private String username;
 
-    private String password;
+    private String passwd;
 
     public @Bean
     MongoDbFactory mongoDbFactory() throws Exception {
         return new SimpleMongoDbFactory(new MongoClientURI(String.format(
-                "mongodb://%s:%s@%s:%s/%s?authSource=%s", username, password, host, port, database, authenticationDatabase)));
+                "mongodb://%s:%s@%s:%s/%s?authSource=%s", username, passwd, host, port, database, authenticationDatabase)));
     }
 
     public @Bean

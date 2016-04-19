@@ -32,7 +32,7 @@ public class ColorFinder {
         Set<Color> colors = new HashSet<>();
         for (MMCQ.VBox vbox : result.vboxes) {
             int[] rgb = vbox.avg(true);
-            colors.add(nearestColor(new Color(rgb[0], rgb[1], rgb[2]), getPalette()));
+            colors.add(new Color(rgb[0], rgb[1], rgb[2]));
         }
 
         return colors

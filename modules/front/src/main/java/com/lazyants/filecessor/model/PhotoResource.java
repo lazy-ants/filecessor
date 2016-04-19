@@ -26,8 +26,9 @@ public class PhotoResource extends ResourceSupport {
 
         add(linkTo(methodOn(PhotoController.class).get(photo.getId())).withSelfRel());
         add(new Link(path + "original/" + photo.getId() + "." + photo.getExtension(), "original"));
-        add(new Link(new UriTemplate(path + "resize_{width}x{height}/" + photo.getId() + "." + photo.getExtension()), "resize"));
-        add(new Link(new UriTemplate(path + "crop_{width}x{height}/" + photo.getId() + "." + photo.getExtension()), "crop"));
-        add(new Link(new UriTemplate(path + "resize_coordinates_{x1}x{y1}_{x2}x{y2}/" + photo.getId() + "." + photo.getExtension()), "coordinates"));
+        add(new Link(new UriTemplate(path + "transform/resize_{width}x{height}/" + photo.getId() + "." + photo.getExtension()), "resize"));
+        add(new Link(new UriTemplate(path + "transform/crop_{width}x{height}/" + photo.getId() + "." + photo.getExtension()), "crop"));
+        add(new Link(new UriTemplate(path + "transform/crop_coordinates_{x1}x{y1}_{x2}x{y2}/" + photo.getId() + "." + photo.getExtension()), "coordinates"));
+        add(new Link(new UriTemplate(path + "transform/rotate_{angle}/" + photo.getId() + "." + photo.getExtension()), "rotate"));
     }
 }
