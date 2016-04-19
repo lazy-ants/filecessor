@@ -9,7 +9,7 @@ nginx:
         - logs_data
         - nginx_cache
 transformer:
-    image: transformer
+    image: lazyants/filecessor-transformation
     restart: always
     volumes_from:
         - images_data

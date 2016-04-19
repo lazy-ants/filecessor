@@ -33,14 +33,18 @@ public class Receiver {
     }
 
     public void receiveMessage(String message) {
-        long time = System.currentTimeMillis();
-        Photo photo = repository.findOne(message);
-        if (photo != null) {
-            File photoFile = new File(configuration.getMediaDirectoryPath() + photo.getId() + "." + photo.getExtension());
-            photo.setExif(parser.parseExif(photoFile));
-            photo.setColors(Arrays.asList(finder.findColors(photoFile)));
-            repository.save(photo);
-            logger.info("Execution of image " + photo.getId() + " processing: " + (System.currentTimeMillis() - time) + "ms");
+        try {
+            long time = System.currentTimeMillis();
+            Photo photo = repository.findOne(message);
+            if (photo != null) {
+                File photoFile = new File(configuration.getMediaDirectoryPath() + photo.getId() + "." + photo.getExtension());
+                photo.setExif(parser.parseExif(photoFile));
+                photo.setColors(Arrays.asList(finder.findColors(photoFile)));
+                repository.save(photo);
+                logger.info("Execution of image " + photo.getId() + " processing: " + (System.currentTimeMillis() - time) + "ms");
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
         }
     }
 }
