@@ -54,9 +54,9 @@ public class PhotoSaver {
             photoRepository.save(photo);
 
             BufferedImage image = ImageIO.read(uc.getInputStream());
-            File out = new File(configuration.getMediaDirectoryPath() + photo.getId() + "." + photo.getExtension());
+            File out = new File(configuration.getOriginalDirectory() + photo.getId() + "." + photo.getExtension());
             out.setReadable(true);
-            ImageIO.write(image, "jpg", out);
+            ImageIO.write(image, extension, out);
             publisher.publishPhotoId(photo.getId());
 
             return photo;
@@ -75,7 +75,7 @@ public class PhotoSaver {
         }
         photoRepository.save(photo);
 
-        File to = new File(configuration.getMediaDirectoryPath() + photo.getId() + "." + photo.getExtension());
+        File to = new File(configuration.getOriginalDirectory() + photo.getId() + "." + photo.getExtension());
         File from = new File(file.getFilePath());
         try {
             Files.move(from.toPath(), to.toPath(), StandardCopyOption.REPLACE_EXISTING);
