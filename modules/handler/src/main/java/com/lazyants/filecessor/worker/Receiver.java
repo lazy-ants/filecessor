@@ -43,11 +43,11 @@ public class Receiver {
         try {
             if (photo != null) {
                 File photoFile = new File(configuration.getOriginalDirectory() + photo.getId() + "." + photo.getExtension());
+                photo.setExif(parser.parseExif(photoFile));
+
                 BufferedImage original = ImageIO.read(photoFile);
                 BufferedImage scaledImg = Scalr.resize(original, Scalr.Method.QUALITY, Scalr.Mode.FIT_EXACT, REQUIRED_WIDTH, original.getHeight() * REQUIRED_WIDTH / original.getWidth());
-                photo.setExif(parser.parseExif(photoFile));
                 photo.setColors(Arrays.asList(finder.findColors(scaledImg)));
-                repository.save(photo);
 
                 File regularFile = new File(configuration.getRegularDirectory() + photo.getId() + "." + photo.getExtension());
                 regularFile.setReadable(true);
@@ -57,6 +57,8 @@ public class Receiver {
             }
         } catch (Exception e) {
             logger.error("Error with photo " + photo.getId() + ": " + e.getMessage());
+        } finally {
+            repository.save(photo);
         }
     }
 }

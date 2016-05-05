@@ -22,6 +22,7 @@ public class PhotoFile {
 
     @AssertTrue
     public boolean isTypeValid() {
-        return fileContentType.equals("image/jpeg") || fileContentType.equals("image/gif") || fileContentType.equals("image/png");
+        return fileContentType.equals("image/jpeg") || fileContentType.equals("image/gif") ||
+                fileContentType.equals("image/png") || fileContentType.equals("image/tiff");
     }
 }

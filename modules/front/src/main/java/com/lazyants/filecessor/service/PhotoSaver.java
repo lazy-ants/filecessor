@@ -56,7 +56,7 @@ public class PhotoSaver {
             BufferedImage image = ImageIO.read(uc.getInputStream());
             File out = new File(configuration.getOriginalDirectory() + photo.getId() + "." + photo.getExtension());
             out.setReadable(true);
-            ImageIO.write(image, "jpg", out);
+            ImageIO.write(image, extension, out);
             publisher.publishPhotoId(photo.getId());
 
             return photo;
