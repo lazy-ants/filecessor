@@ -13,6 +13,9 @@ transformer:
     restart: always
     volumes_from:
         - images_data
+    environment:
+        MEDIA_ORIGINAL: /media/original/
+        MEDIA_REGULAR: /media/regular/
 front:
     image: lazyants/filecessor-front
     restart: always
