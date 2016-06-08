@@ -10,6 +10,7 @@ Upload and processing images for your web projects
     - `resize`
     - `crop`
     - `coordinates` - crop image by given coordinates
+    - [Transformations documention](https://github.com/lazy-ants/filecessor-transformation)
 - After upload images save to async queue in rabbitmq for handling
     - fetch exif
     - search of dominant image colors
@@ -22,26 +23,13 @@ Upload and processing images for your web projects
 ## Install with Docker
 
 - install [Docker](http://docker.com) and [Docker Compose](https://docs.docker.com/compose/)
+- `git clone` this repo `somewhere/filecessor`
 - copy `docker-compose.override.yml.dist` to `docker-compose.override.yml` for override basic configuration
 - set mongodb password `MONGO_PASSWD` environment variable in `docker-compose.override.yml`
-- you can configure front and handler container via such environment variables
-    - `MONGO_HOST`
-    - `MONGO_PORT`
-    - `MONGO_DATABASE`
-    - `MONGO_AUTHENTICATION_DATABASE`
-    - `MONGO_USERNAME`
-    - `MONGO_PASSWD`
-    - `RABBIT_HOST`
-    - `RABBIT_PORT`
-    - `RABBIT_QUEUE_NAME`
-    - `RABBIT_TOPIC_NAME`
-    - `APPLICATION_MEDIA_DIRECTORY_PATH` (path to save photos)
-- you can configure front container via environment variables
-    - `APPLICATION_JWT_SECRET`
-    - `USERS_FILE` (path to file where json with users data is located)
-- you can configure handler container via environment variables
-    - `RABBIT_CONCURRENCY` (max quantity of concurrent consumers)
-    - `APPLICATION_EXIFTOOL_PATH` (path to exiftool lib)
+- [configuration additional variables](https://github.com/lazy-ants/filecessor/doc/configuration.md)
+- run containers with `docker-composer up -d`
+- open in browser [http://localhost/api/photos](http://localhost/api/photos) the Api endpoint with list of all uploaded photos (it's empty by default)
+- read more from the [Api documentaion](http://docs.filecessor.apiary.io/#reference/get-photos/all-photos/show-all-paginated-photos)
     
 ### Configure app users
 
@@ -85,6 +73,7 @@ db_data:
 
     **WARNING (Windows & OS X)**: The default Docker setup on Windows and OS X uses a VirtualBox VM to host the Docker daemon. Unfortunately, the mechanism VirtualBox uses to share folders between the host system and the Docker container is not compatible with the memory mapped files used by MongoDB (see [vbox bug](https://www.virtualbox.org/ticket/819), [docs.mongodb.org](https://docs.mongodb.org/manual/administration/production-notes/#fsync-on-directories) and related [jira.mongodb.org bug](https://jira.mongodb.org/browse/SERVER-8600)). This means that it is not possible to run a MongoDB container with the data directory mapped to the host.
 
+- Solved in the Docker native for Mac users, in beta now [https://beta.docker.com](https://beta.docker.com/)
 
 ## Contributing
 
