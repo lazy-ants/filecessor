@@ -14,6 +14,7 @@ Upload and processing images for your web projects
 - After upload images save to async queue in rabbitmq for handling
     - fetch exif
     - search of dominant image colors
+    - create pre-cache image for quick resize small images(less 1500px width)
 - Expose REST API for photo resources
 
 ## Api
@@ -30,34 +31,6 @@ Upload and processing images for your web projects
 - run containers with `docker-composer up -d`
 - open in browser [http://localhost/api/photos](http://localhost/api/photos) the Api endpoint with list of all uploaded photos (it's empty by default)
 - read more from the [Api documentaion](http://docs.filecessor.apiary.io/#reference/get-photos/all-photos/show-all-paginated-photos)
-    
-### Configure app users
-
-By default app have one user with login and password `user1`, you can override users configuration by:
-
-- create `users.json` file in such format 
-```json
-    [
-      {
-        "name": "user1",
-        "password": "user1"
-      },
-      {
-        "name": "user2",
-        "password": "user2"
-      }
-    ]
-```
-
-- update `docker-compose.override.yml` file `front` container with volumes and environment variable `APPLICATION_USERS_FILE` to use file with users
-
-```yaml
-front:
-    volumes:
-        - ./users.json:/users.json
-    environment:
-        APPLICATION_USERS_FILE: "/users.json"
-```
 
 ## Known issues
 
