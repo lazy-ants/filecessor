@@ -1,7 +1,7 @@
 nginx:
     ports:
         - 80:80
-front:
+rest:
     environment:
         MONGO_PASSWD: app
 handler:

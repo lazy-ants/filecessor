@@ -2,7 +2,7 @@ nginx:
     build: docker/nginx
     restart: always
     links:
-        - front
+        - rest
         - transformer
     volumes_from:
         - images_data
@@ -16,8 +16,8 @@ transformer:
     environment:
         MEDIA_ORIGINAL: /media/original/
         MEDIA_REGULAR: /media/regular/
-front:
-    image: lazyants/filecessor-front
+rest:
+    image: lazyants/filecessor-rest
     restart: always
     volumes_from:
         - images_data
